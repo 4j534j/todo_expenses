@@ -34,7 +34,7 @@ app.get('/', (req,res) => {
 	readFile('./tasks.json')
 		.then(tasks => {
 			console.log(tasks)
-			res.render('index', {tasks: tasks})
+			res.render('index', {tasks: tasks, error: null})
 		})
 	});
 
@@ -42,10 +42,17 @@ app.use(express.urlencoded({ extended: true}));
 
 app.post('/', (req, res) => {
 
-
-
-
-
+	let error = null
+	if (req.body.task.trim().length == 0){
+		error = 'Please insert correct task data'
+		readFile('./tasks.json')
+		.then(tasks => {
+			res.render('index', {
+				tasks: tasks,
+				error: error
+			})
+		})
+	}else{
 	readFile("./tasks.json")
 		.then(tasks => {
 			let index
@@ -66,9 +73,9 @@ app.post('/', (req, res) => {
 			res.redirect('/')
 
 		
-			
+		
 		})
-})
+}})
 app.get('/delete-task/:taskID', (req, res) => {
 	let deletedTaskID = parseInt(req.params.taskID)
 	readFile('./tasks.json')
